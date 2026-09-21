@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"github.com/tigerowo/infinite-canvas/model"
+	"github.com/Yougahei/bytebroad-canvas/model"
 )
 
 // SaveStorageObject 保存存储对象记录。

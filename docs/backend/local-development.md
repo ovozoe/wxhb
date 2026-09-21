@@ -17,7 +17,7 @@ cp .env.example .env
 
 - 后端端口是 `8080`
 - 前端端口是 `3000`
-- SQLite 数据库是 `data/infinite-canvas.db`
+- SQLite 数据库是 `data/bytebroad-canvas.db`
 
 ## 2. 启动后端
 

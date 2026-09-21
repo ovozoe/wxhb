@@ -8,8 +8,8 @@ import { fetchUserConfig, syncUserAssetData, syncUserImageHistory } from "./api/
 import { saveVideoGenerationLogs } from "./api/generation-logs";
 
 export async function checkLocalAssetsExist(): Promise<boolean> {
-    const imageStore = localforage.createInstance({ name: "infinite-canvas", storeName: "image_files" });
-    const mediaStore = localforage.createInstance({ name: "infinite-canvas", storeName: "media_files" });
+    const imageStore = localforage.createInstance({ name: "bytebroad-canvas", storeName: "image_files" });
+    const mediaStore = localforage.createInstance({ name: "bytebroad-canvas", storeName: "media_files" });
 
     let found = false;
     try {
@@ -43,8 +43,8 @@ export async function migrateLocalAssetsToCloud(
     const userConfig = await fetchUserConfig(token).catch(() => null);
     const remoteAssets = userConfig?.assetData as { assets?: any[] } | undefined;
 
-    const imageStore = localforage.createInstance({ name: "infinite-canvas", storeName: "image_files" });
-    const mediaStore = localforage.createInstance({ name: "infinite-canvas", storeName: "media_files" });
+    const imageStore = localforage.createInstance({ name: "bytebroad-canvas", storeName: "image_files" });
+    const mediaStore = localforage.createInstance({ name: "bytebroad-canvas", storeName: "media_files" });
 
     // 1. Gather all local keys and their blobs
     const imagesToUpload: { key: string; blob: Blob }[] = [];
@@ -140,11 +140,11 @@ export async function migrateLocalAssetsToCloud(
             };
             await localforage
                 .createInstance({
-                    name: "infinite-canvas",
+                    name: "bytebroad-canvas",
                     storeName: "app_state",
                 })
                 .setItem(
-                    "infinite-canvas:canvas_store",
+                    "bytebroad-canvas:canvas_store",
                     JSON.stringify({
                         state: finalCanvas,
                         version: 0,
@@ -174,8 +174,8 @@ export async function migrateLocalAssetsToCloud(
             const mergedAssets = mergeAssets(remoteAssets?.assets || [], nextAssets.assets);
             const finalAssets = { assets: mergedAssets };
             // Save locally
-            await localforage.createInstance({ name: "infinite-canvas", storeName: "app_state" })
-                .setItem("infinite-canvas:asset_store", JSON.stringify({ state: finalAssets }));
+            await localforage.createInstance({ name: "bytebroad-canvas", storeName: "app_state" })
+                .setItem("bytebroad-canvas:asset_store", JSON.stringify({ state: finalAssets }));
             // Set in Zustand store
             useAssetStore.setState(finalAssets);
             // Sync to server
@@ -186,13 +186,13 @@ export async function migrateLocalAssetsToCloud(
     }
 
     // 6. Update Image Generation Logs
-    const imageLogStore = localforage.createInstance({ name: "infinite-canvas", storeName: "image_generation_logs" });
-    const imageCategoryStore = localforage.createInstance({ name: "infinite-canvas", storeName: "image_generation_categories" });
+    const imageLogStore = localforage.createInstance({ name: "bytebroad-canvas", storeName: "image_generation_logs" });
+    const imageCategoryStore = localforage.createInstance({ name: "bytebroad-canvas", storeName: "image_generation_categories" });
     const localLogs: any[] = [];
     await imageLogStore.iterate((value) => {
         localLogs.push(value);
     });
-    const localCategories = (await imageCategoryStore.getItem<any[]>("infinite-canvas:image_generation_categories")) || [];
+    const localCategories = (await imageCategoryStore.getItem<any[]>("bytebroad-canvas:image_generation_categories")) || [];
 
     if (localLogs.length > 0 || localCategories.length > 0) {
         try {
@@ -205,7 +205,7 @@ export async function migrateLocalAssetsToCloud(
             await Promise.all(
                 nextLogsData.logs.map((log: any) => imageLogStore.setItem(log.id, log))
             );
-            await imageCategoryStore.setItem("infinite-canvas:image_generation_categories", nextLogsData.categories);
+            await imageCategoryStore.setItem("bytebroad-canvas:image_generation_categories", nextLogsData.categories);
 
             // Sync to server
             await syncUserImageHistory(token, { logs: nextLogsData.logs, categories: nextLogsData.categories });
@@ -215,7 +215,7 @@ export async function migrateLocalAssetsToCloud(
     }
 
     // 7. Update Video Generation Logs
-    const videoLogStore = localforage.createInstance({ name: "infinite-canvas", storeName: "video_generation_logs" });
+    const videoLogStore = localforage.createInstance({ name: "bytebroad-canvas", storeName: "video_generation_logs" });
     const localVideoLogs: any[] = [];
     await videoLogStore.iterate((value) => {
         localVideoLogs.push(value);

@@ -100,8 +100,8 @@ type UpdateAiConfig = <K extends keyof AiConfig>(key: K, value: AiConfig[K]) => 
 type WorkbenchLayout = "side" | "bottom";
 type AssetPickerTarget = "general" | "image" | "video" | "audio" | "firstFrame" | "lastFrame" | "element";
 
-const WORKBENCH_LAYOUT_KEY = "infinite-canvas:video-workbench-layout";
-const logStore = localforage.createInstance({ name: "infinite-canvas", storeName: "video_generation_logs" });
+const WORKBENCH_LAYOUT_KEY = "bytebroad-canvas:video-workbench-layout";
+const logStore = localforage.createInstance({ name: "bytebroad-canvas", storeName: "video_generation_logs" });
 export default function VideoPage() {
     const { message } = App.useApp();
     const fileInputRef = useRef<HTMLInputElement>(null);

@@ -3,8 +3,8 @@ package handler
 import (
 	"encoding/json"
 
-	"github.com/tigerowo/infinite-canvas/model"
-	"github.com/tigerowo/infinite-canvas/service"
+	"github.com/Yougahei/bytebroad-canvas/model"
+	"github.com/Yougahei/bytebroad-canvas/service"
 )
 
 func isMiniMaxH3Channel(channel model.ModelChannel, modelName string) bool {

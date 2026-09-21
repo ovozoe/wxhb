@@ -1,6 +1,6 @@
 ---
 title: 快速开始
-description: 用最少步骤把无限画布跑起来
+description: 用最少步骤把 bytebroad-canvas 跑起来
 ---
 
 # 快速开始
@@ -10,8 +10,8 @@ description: 用最少步骤把无限画布跑起来
 ## Docker 启动
 
 ```bash
-git clone git@github.com:tigerowo/infinite-canvas.git
-cd infinite-canvas
+git clone git@github.com:Yougahei/bytebroad-canvas.git
+cd bytebroad-canvas
 cp .env.example .env
 docker compose up -d
 ```

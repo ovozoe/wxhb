@@ -3,7 +3,7 @@ package service
 import (
 	"testing"
 
-	"github.com/tigerowo/infinite-canvas/model"
+	"github.com/Yougahei/bytebroad-canvas/model"
 )
 
 func TestValidateEnabledStorageProviderTypes(t *testing.T) {
@@ -71,7 +71,7 @@ func TestStorageProviderConfigured(t *testing.T) {
 }
 
 func TestCleanStoragePath(t *testing.T) {
-	if got, err := cleanStoragePath("/infinite-canvas/user/file.png/"); err != nil || got != "infinite-canvas/user/file.png" {
+	if got, err := cleanStoragePath("/bytebroad-canvas/user/file.png/"); err != nil || got != "bytebroad-canvas/user/file.png" {
 		t.Fatalf("cleanStoragePath() = %q, %v", got, err)
 	}
 	for _, value := range []string{"", ".", "..", "a//b", "a/../b"} {

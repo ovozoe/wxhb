@@ -3,7 +3,7 @@ package service
 import (
 	"strings"
 
-	"github.com/tigerowo/infinite-canvas/model"
+	"github.com/Yougahei/bytebroad-canvas/model"
 )
 
 const ModelChannelProtocolMiMo = "mimo"

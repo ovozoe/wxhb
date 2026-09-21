@@ -3,10 +3,10 @@ package main
 import (
 	"log"
 
-	"github.com/tigerowo/infinite-canvas/config"
-	"github.com/tigerowo/infinite-canvas/handler"
-	"github.com/tigerowo/infinite-canvas/router"
-	"github.com/tigerowo/infinite-canvas/service"
+	"github.com/Yougahei/bytebroad-canvas/config"
+	"github.com/Yougahei/bytebroad-canvas/handler"
+	"github.com/Yougahei/bytebroad-canvas/router"
+	"github.com/Yougahei/bytebroad-canvas/service"
 )
 
 func main() {

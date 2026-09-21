@@ -1,7 +1,7 @@
 {
-  "name": "infinite-canvas",
+  "name": "bytebroad-canvas",
   "interface": {
-    "displayName": "infinite-canvas-plugin"
+    "displayName": "bytebroad-canvas-plugin"
   },
   "plugins": [
     {

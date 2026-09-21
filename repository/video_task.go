@@ -1,6 +1,6 @@
 package repository
 
-import "github.com/tigerowo/infinite-canvas/model"
+import "github.com/Yougahei/bytebroad-canvas/model"
 
 func SaveVideoTask(task model.VideoTask) (model.VideoTask, error) {
 	db, err := DB()

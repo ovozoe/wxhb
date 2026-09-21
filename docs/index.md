@@ -1,4 +1,4 @@
-# 无限画布文档索引
+# ByteBroad Canvas 文档索引
 
 ## 项目介绍
 
@@ -24,10 +24,6 @@
 
 - [开源协议](business/license.md)
 - [商务合作](business/business.md)
-
-## 赞助支持
-
-- [打赏支持](support/donate.md)
 
 ## 项目进度
 

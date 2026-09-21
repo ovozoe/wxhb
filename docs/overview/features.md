@@ -201,8 +201,8 @@ Base URL 如果已经以 `/v1`、`/api/v3` 或 `/api/plan/v3` 结尾，系统不
 
 ### Codex 插件与 MCP
 
-- 本地服务通过 `npx -y @tigerowo/canvas-agent@latest` 获取 npm 包及依赖并启动；网页与服务在同一台电脑使用，直接启动即可连接画布内 Codex，无需安装插件
-- 外部 Codex 通过 GitHub 插件市场安装 `canvas-agent@infinite-canvas`，加载仓库内的插件配置和 Skill；插件 MCP 使用 `npx -y @tigerowo/canvas-agent@latest mcp`，不依赖开发目录或插件缓存内手动安装的依赖
+- 本地服务通过 `npx -y @yougahei/canvas-agent@latest` 获取 npm 包及依赖并启动；网页与服务在同一台电脑使用，直接启动即可连接画布内 Codex，无需安装插件
+- 外部 Codex 通过 GitHub 插件市场安装 `canvas-agent@bytebroad-canvas`，加载仓库内的插件配置和 Skill；插件 MCP 使用 `npx -y @yougahei/canvas-agent@latest mcp`，不依赖开发目录或插件缓存内手动安装的依赖
 - 服务首次启动自动生成并保存 Token，后续启动复用；正确 Token 连接后记录允许的网站来源，无需手填 `.env`，断开和刷新后可重新连接
 - 插件复用原画布标签，或在指定浏览器及原配置中打开画布，保留原链接参数并自动带入连接信息、展开面板；通过 MCP 确认连接目标，缺少本机配置或打开失败时明确报错且不输出凭据
 - Windows 插件启动服务或浏览器时通过执行工具申请所需权限，获批后继续并复用已有授权；禁止申请或审批被拒绝时说明原因

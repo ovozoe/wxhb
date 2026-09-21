@@ -121,14 +121,14 @@ type ResultViewMode = "all" | "category";
 
 type UpdateAiConfig = <K extends keyof AiConfig>(key: K, value: AiConfig[K]) => void;
 type WorkbenchLayout = "side" | "bottom";
-const LOG_STORE_KEY = "infinite-canvas:image_generation_logs";
-const CATEGORY_STORE_KEY = "infinite-canvas:image_generation_categories";
-const WORKBENCH_LAYOUT_KEY = "infinite-canvas:image-workbench-layout";
-const RESULT_VIEW_MODE_KEY = "infinite-canvas:image-result-view-mode";
+const LOG_STORE_KEY = "bytebroad-canvas:image_generation_logs";
+const CATEGORY_STORE_KEY = "bytebroad-canvas:image_generation_categories";
+const WORKBENCH_LAYOUT_KEY = "bytebroad-canvas:image-workbench-layout";
+const RESULT_VIEW_MODE_KEY = "bytebroad-canvas:image-result-view-mode";
 const IMAGE_TASK_POLL_INTERVAL_MS = 10000;
-const WORKFLOW_BUTTON_POSITION_KEY = "infinite-canvas:workflow-button-position";
-const logStore = localforage.createInstance({ name: "infinite-canvas", storeName: "image_generation_logs" });
-const categoryStore = localforage.createInstance({ name: "infinite-canvas", storeName: "image_generation_categories" });
+const WORKFLOW_BUTTON_POSITION_KEY = "bytebroad-canvas:workflow-button-position";
+const logStore = localforage.createInstance({ name: "bytebroad-canvas", storeName: "image_generation_logs" });
+const categoryStore = localforage.createInstance({ name: "bytebroad-canvas", storeName: "image_generation_categories" });
 export default function ImagePage() {
     const { message, modal } = App.useApp();
     const fileInputRef = useRef<HTMLInputElement>(null);

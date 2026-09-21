@@ -8,8 +8,8 @@ import { canvasThemes } from "@/lib/canvas-theme";
 import { useThemeStore } from "@/stores/use-theme-store";
 import type { useCodexAgent } from "../agent/use-codex-agent";
 
-const pluginCommand = "codex plugin marketplace add https://github.com/tigerowo/infinite-canvas.git\ncodex plugin add canvas-agent@infinite-canvas";
-const startCommand = "npx -y @tigerowo/canvas-agent@latest";
+const pluginCommand = "codex plugin marketplace add https://github.com/Yougahei/bytebroad-canvas.git\ncodex plugin add canvas-agent@bytebroad-canvas";
+const startCommand = "npx -y @yougahei/canvas-agent@latest";
 
 export function CanvasCodexConnectView({ agent, onChat }: {
     agent: Pick<ReturnType<typeof useCodexAgent>, "connection" | "status" | "error" | "connect" | "disconnect">;
@@ -37,15 +37,15 @@ export function CanvasCodexConnectView({ agent, onChat }: {
             </div>
             <div className="space-y-2 px-3 py-2.5">
                 <h3 className="text-sm font-medium">方式一：在 Codex 中使用插件</h3>
-                <p className="text-xs leading-5" style={{ color: theme.node.muted }}>安装本项目的 Infinite Canvas 插件后，让 Codex 打开并连接画布。插件会启动本地 Agent，并自动带入连接信息。</p>
+                <p className="text-xs leading-5" style={{ color: theme.node.muted }}>安装本项目的 ByteBroad Canvas 插件后，让 Codex 打开并连接画布。插件会启动本地 Agent，并自动带入连接信息。</p>
                 {commandBlock(pluginCommand)}
-                <p className="text-xs leading-5" style={{ color: theme.node.muted }}>安装插件后新建 Codex 对话，说“帮我打开并连接到 Infinite Canvas”。</p>
+                <p className="text-xs leading-5" style={{ color: theme.node.muted }}>安装插件后新建 Codex 对话，说“帮我打开并连接到 ByteBroad Canvas”。</p>
             </div>
             <div className="space-y-2 rounded-lg border px-3 py-2.5" style={{ borderColor: theme.node.stroke }}>
                 <div className="text-xs font-medium">Codex 插件提醒</div>
                 <p className="text-xs leading-5" style={{ color: theme.node.muted }}>安装插件或手动添加 MCP 后，画布工具才会进入 Codex 上下文。仅启动本地 Agent 不会安装 MCP。</p>
                 {commandBlock("codex plugin remove canvas-agent", "移除插件")}
-                {commandBlock("codex mcp remove infinite-canvas", "移除 MCP")}
+                {commandBlock("codex mcp remove bytebroad-canvas", "移除 MCP")}
             </div>
             <div className="space-y-2 px-3 py-2.5">
                 <h3 className="text-sm font-medium">方式二：直接运行 Agent</h3>

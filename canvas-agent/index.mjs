@@ -11,7 +11,7 @@ import { ListToolsRequestSchema, CallToolRequestSchema } from "@modelcontextprot
 import { CodexClient } from "./codex.mjs";
 
 const entry = fileURLToPath(import.meta.url);
-const configPath = resolve(homedir(), ".infinite-canvas", "codex-agent.json");
+const configPath = resolve(homedir(), ".bytebroad-canvas", "codex-agent.json");
 const readConfig = () => existsSync(configPath) ? JSON.parse(readFileSync(configPath, "utf8")) : null;
 const savedConfig = readConfig();
 const serviceId = savedConfig?.serviceId || randomUUID();
@@ -124,7 +124,7 @@ async function runRpc(session, method, params = {}, generation) {
             cwd: workspace,
             approvalPolicy: "on-request",
             sandbox: "workspace-write",
-            config: { mcp_servers: { "infinite-canvas": {
+            config: { mcp_servers: { "bytebroad-canvas": {
                 command: process.execPath,
                 args: [entry, "mcp"],
                 default_tools_approval_mode: "approve",
@@ -159,7 +159,7 @@ async function startMcp() {
         if (!response.ok) throw new Error(value.error || "画布连接失败");
         return value;
     }
-    const server = new Server({ name: "infinite-canvas", version: "0.1.0" }, { capabilities: { tools: { listChanged: true } } });
+    const server = new Server({ name: "bytebroad-canvas", version: "0.1.0" }, { capabilities: { tools: { listChanged: true } } });
     const toolsPath = "/tools?clientId=" + encodeURIComponent(clientId);
     server.setRequestHandler(ListToolsRequestSchema, async () => {
         try {

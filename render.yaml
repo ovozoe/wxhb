@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: infinite-canvas
+    name: bytebroad-canvas
     runtime: docker
     plan: free
     autoDeployTrigger: off
@@ -19,4 +19,4 @@ services:
       - key: STORAGE_DRIVER
         value: sqlite
       - key: DATABASE_DSN
-        value: data/infinite-canvas.db
+        value: data/bytebroad-canvas.db

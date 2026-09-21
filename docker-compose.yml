@@ -1,11 +1,11 @@
 services:
   app:
-    image: ghcr.io/tigerowo/infinite-canvas:latest
+    image: ghcr.io/Yougahei/bytebroad-canvas:latest
     build:
       context: .
       dockerfile: Dockerfile
     pull_policy: always
-    container_name: infinite-canvas
+    container_name: bytebroad-canvas
     env_file:
       - .env
     volumes:

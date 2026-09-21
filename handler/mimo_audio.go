@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/tigerowo/infinite-canvas/service"
+	"github.com/Yougahei/bytebroad-canvas/service"
 )
 
 type mimoTTSProxyRequest struct {

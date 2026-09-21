@@ -18,7 +18,7 @@ type AgentSkillStore = {
     deleteSkill: (id: string) => Promise<void>;
 };
 
-const localSkillStore = localforage.createInstance({ name: "infinite-canvas", storeName: "agent_skills" });
+const localSkillStore = localforage.createInstance({ name: "bytebroad-canvas", storeName: "agent_skills" });
 const localSkillKey = "items";
 let loadedSkillsKey = "";
 let loadSkillsPromise: Promise<void> | null = null;

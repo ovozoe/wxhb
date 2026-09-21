@@ -88,6 +88,7 @@ export class ImageRequestError extends Error {
 }
 
 type ImageRequestParams = {
+    watermark: boolean;
     n: number;
     quality: string;
     size?: string;
@@ -135,7 +136,7 @@ function greatestCommonDivisor(a: number, b: number) {
     return a;
 }
 
-function resolveSize(quality: string, ratio: string): string | undefined {
+function resolveSize(quality: string, ratio: string, minPixels = 0): string | undefined {
     const basePixels = QUALITY_BASE[quality];
     if (!basePixels || ratio === "auto" || !ratio) return undefined;
 
@@ -146,17 +147,22 @@ function resolveSize(quality: string, ratio: string): string | undefined {
     if (!w || !h) return undefined;
 
     const a = greatestCommonDivisor(w, h);
+    const units = (w / a) * (h / a);
 
-    const unit = Math.round(Math.sqrt((basePixels * basePixels) / ((w / a) * (h / a))) / 16) * 16;
+    let unit = Math.round(Math.sqrt((basePixels * basePixels) / units) / 16) * 16;
+    if (minPixels > 0) {
+        const minUnit = Math.ceil(Math.sqrt(minPixels / units) / 16) * 16;
+        if (unit < minUnit) unit = minUnit;
+    }
     return `${(w / a) * unit}x${(h / a) * unit}`;
 }
 
-function resolveRequestSize(quality: string | undefined, size: string) {
+function resolveRequestSize(quality: string | undefined, size: string, minPixels = 0) {
     const value = size.trim();
     if (!value || value === "auto") return undefined;
     if (/^\d+x\d+$/.test(value)) return value;
     // 用户只选了宽高比时,即使 quality=auto 也要折算成具体像素尺寸,避免 "1:1" 这种非法值发到 API。
-    return resolveSize(quality && QUALITY_BASE[quality] ? quality : "low", value);
+    return resolveSize(quality && QUALITY_BASE[quality] ? quality : "low", value, minPixels);
 }
 
 function createImageRequestParams(config: AiConfig): ImageRequestParams {
@@ -166,10 +172,18 @@ function createImageRequestParams(config: AiConfig): ImageRequestParams {
     return {
         n: normalizeBoundedInteger(config.count, 1, 1, 15),
         quality,
-        size: resolveRequestSize(quality, config.size),
+        watermark: config.imageWatermark !== "false",
+        size: resolveRequestSize(quality, config.size, isSeedreamImageModel(config.model) ? SEEDREAM_MIN_IMAGE_PIXELS : 0),
         timeoutSeconds: IMAGE_REQUEST_TIMEOUT_SECONDS,
         streamPartialImages: normalizeBoundedInteger(config.streamPartialImages, 1, 0, 3),
     };
+}
+
+// Seedream 系列要求图片至少 3686400 像素（约 2k 档），低基准折算出的尺寸会被上游拒绝。
+const SEEDREAM_MIN_IMAGE_PIXELS = 3686400;
+
+function isSeedreamImageModel(model: string) {
+    return model.trim().toLowerCase().includes("seedream");
 }
 
 function isGrokImageModel(model: string) {
@@ -222,6 +236,8 @@ function applyImageGenerationParams(body: Record<string, unknown>, config: AiCon
 
     if (params.size) body.size = params.size;
     if (params.quality && !config.codexCli) body.quality = params.quality;
+    // Seedream 默认给生成图打水印，提供开关关闭（其他模型未声明该参数，不传）。
+    if (isSeedreamImageModel(model)) body.watermark = params.watermark;
 }
 
 function applyImageGenerationOptions(body: Record<string, unknown>, config: AiConfig, params: ImageRequestParams) {
@@ -776,6 +792,7 @@ async function requestImageEditSingle(config: AiConfig, prompt: string, referenc
     if (params.n > 1) formData.set("n", String(params.n));
     if (params.size) formData.set("size", params.size);
     if (params.quality && !config.codexCli) formData.set("quality", params.quality);
+    if (isSeedreamImageModel(config.model) && !params.watermark) formData.set("watermark", "false");
     if (config.responseFormatB64Json) formData.set("response_format", "b64_json");
     if (config.streamImages) {
         formData.set("stream", "true");
@@ -1139,6 +1156,7 @@ async function createCanvasImageTaskRequest(config: AiConfig & { seedIndex?: num
             formData.set("partial_images", String(params.streamPartialImages));
         }
         if (params.size) formData.set("size", params.size);
+        if (isSeedreamImageModel(config.model) && !params.watermark) formData.set("watermark", "false");
         const files = await Promise.all(references.map(async (image) => dataUrlToFile({ ...image, dataUrl: await imageToDataUrl(image) })));
         files.forEach((file) => formData.append("image", file));
         return { method: "POST", headers: tokenHeaders, body: formData };

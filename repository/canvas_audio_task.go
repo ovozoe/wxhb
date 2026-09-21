@@ -1,6 +1,6 @@
 package repository
 
-import "github.com/tigerowo/infinite-canvas/model"
+import "github.com/Yougahei/bytebroad-canvas/model"
 
 func SaveCanvasAudioTask(task model.CanvasAudioTask) (model.CanvasAudioTask, error) {
 	db, err := DB()

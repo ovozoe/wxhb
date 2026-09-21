@@ -12,10 +12,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/tigerowo/infinite-canvas/config"
-	"github.com/tigerowo/infinite-canvas/model"
-	"github.com/tigerowo/infinite-canvas/repository"
-	"github.com/tigerowo/infinite-canvas/service"
+	"github.com/Yougahei/bytebroad-canvas/config"
+	"github.com/Yougahei/bytebroad-canvas/model"
+	"github.com/Yougahei/bytebroad-canvas/repository"
+	"github.com/Yougahei/bytebroad-canvas/service"
 )
 
 func TestModelProtocolChannelFlow(t *testing.T) {

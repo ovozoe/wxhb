@@ -9,15 +9,15 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
-	"github.com/tigerowo/infinite-canvas/config"
-	"github.com/tigerowo/infinite-canvas/handler"
-	"github.com/tigerowo/infinite-canvas/model"
-	"github.com/tigerowo/infinite-canvas/service"
+	"github.com/Yougahei/bytebroad-canvas/config"
+	"github.com/Yougahei/bytebroad-canvas/handler"
+	"github.com/Yougahei/bytebroad-canvas/model"
+	"github.com/Yougahei/bytebroad-canvas/service"
 )
 
 const (
-	anonymousStorageCookieName = "infinite_canvas_anonymous_storage"
-	anonymousStorageIssuer     = "infinite-canvas-anonymous-storage"
+	anonymousStorageCookieName = "bytebroad_canvas_anonymous_storage"
+	anonymousStorageIssuer     = "bytebroad-canvas-anonymous-storage"
 	anonymousStorageCookieAge  = 365 * 24 * time.Hour
 	anonymousStorageBodyLimit  = 129 << 20
 )

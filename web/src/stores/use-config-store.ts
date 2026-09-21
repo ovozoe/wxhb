@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-import { directAIProviderForProtocol, type DirectAIProvider, type ModelChannelProtocol } from "@/lib/model-channel";
+import { BYTEBROAD_GATEWAY_BASE_URL, BYTEBROAD_GATEWAY_MODELS, directAIProviderForProtocol, type DirectAIProvider, type ModelChannelProtocol } from "@/lib/model-channel";
 import { apiGet } from "@/services/api/request";
 import type { AdminPublicSettings } from "@/services/api/admin";
 import { useUserStore } from "@/stores/use-user-store";
@@ -65,6 +65,7 @@ export type AiConfig = {
     audioModels: string[];
     quality: string;
     size: string;
+    imageWatermark: string;
     videoSize: string;
     count: string;
     canvasImageCount: string;
@@ -92,18 +93,18 @@ export type AiConfig = {
     audioChannelId: string;
 };
 
-export const CONFIG_STORE_KEY = "infinite-canvas:ai_config_store";
+export const CONFIG_STORE_KEY = "bytebroad-canvas:ai_config_store";
 export type ModelCapability = "image" | "video" | "text" | "audio";
 
 export const defaultConfig: AiConfig = {
     channelMode: "local",
-    baseUrl: "https://api.openai.com",
+    baseUrl: BYTEBROAD_GATEWAY_BASE_URL,
     apiKey: "",
-    model: "gpt-image-2",
-    imageModel: "gpt-image-2",
-    videoModel: "grok-imagine-video",
-    textModel: "gpt-5.5",
-    audioModel: "gpt-4o-mini-tts",
+    model: "doubao-seedream-5-0-260128",
+    imageModel: "doubao-seedream-5-0-260128",
+    videoModel: "doubao-seedance-2-0-260128",
+    textModel: "deepseek-v4-pro",
+    audioModel: "",
     audioVoice: "alloy",
     audioFormat: "mp3",
     audioSpeed: "1",
@@ -131,7 +132,7 @@ export const defaultConfig: AiConfig = {
     videoWatermark: "false",
     videoCharacterOrientation: "video",
     systemPrompt: "",
-    models: [],
+    models: [...BYTEBROAD_GATEWAY_MODELS],
     imageModels: [],
     videoModels: [],
     textModels: [],
@@ -141,6 +142,7 @@ export const defaultConfig: AiConfig = {
     videoSize: "1280x720",
     count: "1",
     canvasImageCount: "1",
+    imageWatermark: "true",
     timeout: "600",
     apiMode: "images",
     streamImages: "",
@@ -426,7 +428,7 @@ export const useConfigStore = create<ConfigStore>()(
                         syncWebDAVStorageConfig: config.syncWebDAVStorageConfig === true,
                         channelMode: config.channelMode || "remote",
                         imageModel: config.imageModel || config.model,
-                        videoModel: config.videoModel || "grok-imagine-video",
+                        videoModel: config.videoModel || "doubao-seedance-2-0-260128",
                         textModel: config.textModel || config.model,
                         audioModel: config.audioModel || defaultConfig.audioModel,
                         audioVoice: config.audioVoice || defaultConfig.audioVoice,
@@ -454,6 +456,7 @@ export const useConfigStore = create<ConfigStore>()(
                         videoWatermark: config.videoWatermark || "false",
                         videoCharacterOrientation: config.videoCharacterOrientation === "image" ? "image" : "video",
                         canvasImageCount: config.canvasImageCount || "1",
+                        imageWatermark: config.imageWatermark || "true",
                         imageModels: filterChannelModelsByCapability(localChannels, "image"),
                         videoModels: filterChannelModelsByCapability(localChannels, "video"),
                         textModels: filterChannelModelsByCapability(localChannels, "text"),
@@ -518,7 +521,7 @@ export function normalizeLocalChannels(config: Partial<AiConfig>): LocalModelCha
         models: Array.isArray(channel.models) ? channel.models.filter(Boolean) : [],
     }));
     if (!normalized.length) {
-        normalized.push({ id: "local-default", protocol: "openai", name: "本地直连", baseUrl: config.baseUrl || defaultConfig.baseUrl, apiKey: config.apiKey || "", models: Array.isArray(config.models) ? config.models.filter(Boolean) : [] });
+        normalized.push({ id: "local-default", protocol: "openai", name: "本地直连", baseUrl: config.baseUrl || BYTEBROAD_GATEWAY_BASE_URL, apiKey: config.apiKey || "", models: Array.isArray(config.models) && config.models.length ? config.models.filter(Boolean) : [...BYTEBROAD_GATEWAY_MODELS] });
     }
     return normalized;
 }

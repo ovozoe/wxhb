@@ -10,7 +10,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/tigerowo/infinite-canvas/model"
+	"github.com/Yougahei/bytebroad-canvas/model"
 )
 
 func TestModelProtocolAuthContract(t *testing.T) {

@@ -1,4 +1,4 @@
-module github.com/tigerowo/infinite-canvas
+module github.com/Yougahei/bytebroad-canvas
 
 go 1.25.0
 

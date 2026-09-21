@@ -12,22 +12,22 @@ func TestNormalizeDockerSQLiteDSNUsesMountedDataDir(t *testing.T) {
 	if err := os.MkdirAll(appDataDir, 0755); err != nil {
 		t.Fatal(err)
 	}
-	Cfg = Config{StorageDriver: "sqlite", DatabaseDSN: "data/infinite-canvas.db?_pragma=busy_timeout(5000)"}
+	Cfg = Config{StorageDriver: "sqlite", DatabaseDSN: "data/bytebroad-canvas.db?_pragma=busy_timeout(5000)"}
 
 	normalizeDockerSQLiteDSN(appDataDir)
 
-	want := filepath.Join(root, "data", "infinite-canvas.db") + "?_pragma=busy_timeout(5000)"
+	want := filepath.Join(root, "data", "bytebroad-canvas.db") + "?_pragma=busy_timeout(5000)"
 	if Cfg.DatabaseDSN != want {
 		t.Fatalf("DatabaseDSN = %q, want %q", Cfg.DatabaseDSN, want)
 	}
 }
 
 func TestNormalizeDockerSQLiteDSNLeavesLocalPathWithoutMountedDataDir(t *testing.T) {
-	Cfg = Config{StorageDriver: "sqlite", DatabaseDSN: "data/infinite-canvas.db"}
+	Cfg = Config{StorageDriver: "sqlite", DatabaseDSN: "data/bytebroad-canvas.db"}
 
 	normalizeDockerSQLiteDSN(filepath.Join(t.TempDir(), "missing-data"))
 
-	if Cfg.DatabaseDSN != "data/infinite-canvas.db" {
+	if Cfg.DatabaseDSN != "data/bytebroad-canvas.db" {
 		t.Fatalf("DatabaseDSN = %q, want relative local path", Cfg.DatabaseDSN)
 	}
 }
