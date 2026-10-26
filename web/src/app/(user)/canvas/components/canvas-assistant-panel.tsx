@@ -39,6 +39,7 @@ import { useThemeStore } from "@/stores/use-theme-store";
 import { createCanvasAgentState, runCanvasAgent } from "../agent/canvas-agent-runtime";
 import type { CanvasAgentContext } from "../agent/canvas-agent-context";
 import type { CanvasAgentAction, CanvasAgentToolResult } from "../agent/canvas-agent-tools";
+import { useCanvasAgentBridge } from "../agent/use-canvas-agent-bridge";
 import {
     MAX_CANVAS_AGENT_SKILLS,
     CanvasNodeType,
@@ -302,6 +303,11 @@ export function CanvasAssistantPanel({
         signal.throwIfAborted();
         return confirmed ? onExecuteAction(action, messageReferenceNodeIds) : { ok: false, code: "delete_cancelled", message: "用户取消删除，原节点已保留" };
     };
+
+    useCanvasAgentBridge({
+        canvasId,
+        executeTool: (action, signal) => executeCanvasTool(action, [], selectedSkills, signal),
+    });
 
     useEffect(() => {
         if (view !== "chat") return;
