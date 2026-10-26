@@ -8,7 +8,6 @@ import { randomBytes, randomUUID } from "node:crypto";
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { ListToolsRequestSchema, CallToolRequestSchema } from "@modelcontextprotocol/sdk/types.js";
-import { CodexClient } from "./codex.mjs";
 
 const entry = fileURLToPath(import.meta.url);
 const configPath = resolve(homedir(), ".bytebroad-canvas", "codex-agent.json");
@@ -25,7 +24,6 @@ const endpoint = "http://127.0.0.1:" + port;
 const workspace = dirname(entry);
 const origins = new Set(process.env.CANVAS_AGENT_ORIGINS?.split(",").map((value) => value.trim()).filter(Boolean) || savedConfig?.origins || []);
 const sessions = new Map();
-const methods = new Set(["model/list", "thread/start", "thread/resume", "thread/archive", "turn/start", "turn/interrupt", "bridge/stop"]);
 
 async function openCanvas() {
     const target = URL.canParse(process.argv[3] || "") ? new URL(process.argv[3]) : null;
@@ -74,13 +72,11 @@ function closeSession(session) {
     session.toolsPending.clear();
     const events = session.events;
     session.events = undefined;
-    session.codex?.close();
     events?.end();
 }
 
 function callTool(session, name, args, source, generation, res) {
     if (!session.events || !session.tools.some((tool) => tool.name === name)) throw new Error("画布未连接或工具不存在");
-    if (source === "codex" && (generation !== session.codexGeneration || !session.codex || session.codex.stopped)) throw new Error("Codex 请求已停止");
     if (res.destroyed) throw new Error("画布工具请求已取消");
     const requestId = randomUUID();
     const cancel = (message) => {
@@ -98,46 +94,6 @@ function callTool(session, name, args, source, generation, res) {
         session.toolsPending.set(requestId, { resolve, reject, timer, source, cancel });
         emit(session, "tool", { requestId, name, arguments: args, source, generation });
     }).finally(() => res.off("close", onClose));
-}
-
-async function runRpc(session, method, params = {}, generation) {
-    if (!methods.has(method)) throw new Error("不支持的 Codex 方法");
-    if (!session.events || !session.canvasId) throw new Error("请先连接画布并注册工具");
-    if (!Number.isSafeInteger(generation) || generation < session.codexGeneration) throw new Error("Codex 请求已停止");
-    if (generation > session.codexGeneration) {
-        session.codexGeneration = generation;
-        session.codex?.close();
-    }
-    if (method === "bridge/stop") return { ok: true };
-    if (!session.codex || session.codex.stopped) session.codex = new CodexClient((event, data) => {
-        if (data.method === "bridge/disconnected") {
-            if (generation === session.codexGeneration) session.codexGeneration += 1;
-            for (const pending of session.toolsPending.values()) if (pending.source === "codex") pending.cancel("Codex 请求已停止");
-        }
-        emit(session, event, { ...data, generation });
-    });
-    const codex = session.codex;
-    await codex.ready;
-    if (method === "thread/start" || method === "thread/resume") {
-        params = {
-            ...params,
-            cwd: workspace,
-            approvalPolicy: "on-request",
-            sandbox: "workspace-write",
-            config: { mcp_servers: { "bytebroad-canvas": {
-                command: process.execPath,
-                args: [entry, "mcp"],
-                default_tools_approval_mode: "approve",
-                env: { CANVAS_AGENT_TOKEN: token, CANVAS_AGENT_PORT: String(port), CANVAS_AGENT_CLIENT_ID: session.clientId, CANVAS_AGENT_SOURCE: "codex", CANVAS_AGENT_CODEX_GENERATION: String(generation) },
-                startup_timeout_sec: 20,
-                tool_timeout_sec: 90,
-            } } },
-        };
-    }
-    if (method === "turn/start") {
-        params = { ...params, approvalPolicy: "on-request", sandboxPolicy: { type: "workspaceWrite", networkAccess: false } };
-    }
-    return codex.request(method, params);
 }
 
 async function startMcp() {
@@ -233,7 +189,7 @@ function startHttp() {
         if (typeof clientId !== "string" || !clientId) return res.status(400).json({ error: "缺少连接标识" });
         let session = sessions.get(clientId);
         if (!session) {
-            session = { clientId, origin: req.headers.origin, tools: [], toolsPending: new Map(), codexGeneration: 0 };
+            session = { clientId, origin: req.headers.origin, tools: [], toolsPending: new Map() };
             sessions.set(clientId, session);
         }
         if (session.origin !== req.headers.origin) return res.status(403).json({ error: "连接来源不匹配" });
@@ -250,17 +206,6 @@ function startHttp() {
             clearInterval(heartbeat);
             if (session.events === res) closeSession(session);
         });
-    });
-    app.post("/rpc", async (req, res) => {
-        const { clientId, method, params, generation } = req.body;
-        const session = findSession(clientId);
-        res.json(await runRpc(session, method, params, generation).finally(() => res.setHeader("x-canvas-agent-generation", String(session.codexGeneration))));
-    });
-    app.post("/reply", (req, res) => {
-        const { clientId, id, result, error, generation } = req.body;
-        const session = findSession(clientId);
-        if (generation === session.codexGeneration) session.codex?.reply(id, result, error);
-        res.json({ ok: true });
     });
     app.post("/result", (req, res) => {
         const { clientId, requestId, result, error } = req.body;

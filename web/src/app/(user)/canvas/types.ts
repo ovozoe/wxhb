@@ -205,9 +205,6 @@ export type CanvasAgentPhase =
     | "complete";
 
 export type CanvasAgentConfig = {
-    mode?: "api" | "codex";
-    codexModel?: string;
-    codexEffort?: string;
     textApiMode: "chat" | "responses";
     textReasoningEnabled?: boolean;
     autoGenerateMedia: boolean;
@@ -265,9 +262,6 @@ export type CanvasAgentJsonFallbackMode = "structured-json" | "prompt-json";
 export type CanvasAgentToolMode = "native" | CanvasAgentJsonFallbackMode;
 
 export type CanvasAssistantSession = {
-    provider?: "api" | "codex";
-    codexThreadId?: string;
-    codexServiceId?: string;
     id: string;
     title: string;
     messages: CanvasAssistantMessage[];
