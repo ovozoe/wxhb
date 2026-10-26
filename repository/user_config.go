@@ -4,7 +4,7 @@ import (
 	"errors"
 	"time"
 
-	"github.com/Yougahei/bytebroad-canvas/model"
+	"github.com/ovozoe/wxhb/model"
 	"gorm.io/gorm"
 )
 

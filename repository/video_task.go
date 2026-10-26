@@ -1,6 +1,6 @@
 package repository
 
-import "github.com/Yougahei/bytebroad-canvas/model"
+import "github.com/ovozoe/wxhb/model"
 
 func SaveVideoTask(task model.VideoTask) (model.VideoTask, error) {
 	db, err := DB()

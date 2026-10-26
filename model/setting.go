@@ -5,8 +5,8 @@ import "encoding/json"
 type SettingKey string
 
 const (
-	SettingKeyPublic  SettingKey = "public"
-	SettingKeyPrivate SettingKey = "private"
+	SettingKeyPublic                 SettingKey = "public"
+	SettingKeyPrivate                SettingKey = "private"
 	SettingKeyAgentSkillsInitialized SettingKey = "agent-skills-initialized"
 
 	StorageProviderTypeS3     = "s3"
@@ -87,12 +87,7 @@ type PublicStorageConfig struct {
 }
 
 type PublicAuthSetting struct {
-	AllowRegister *bool                    `json:"allowRegister"`
-	LinuxDo       PublicLinuxDoAuthSetting `json:"linuxDo"`
-}
-
-type PublicLinuxDoAuthSetting struct {
-	Enabled bool `json:"enabled"`
+	AllowRegister *bool `json:"allowRegister"`
 }
 
 // PrivateSetting 私有配置。
@@ -158,14 +153,7 @@ type PromptSyncSetting struct {
 	Cron    string `json:"cron"`
 }
 
-type PrivateAuthSetting struct {
-	LinuxDo PrivateLinuxDoAuthSetting `json:"linuxDo"`
-}
-
-type PrivateLinuxDoAuthSetting struct {
-	ClientID     string `json:"clientId"`
-	ClientSecret string `json:"clientSecret"`
-}
+type PrivateAuthSetting struct{}
 
 // Setting 系统配置。
 type Setting struct {

@@ -6,8 +6,8 @@ import (
 	"errors"
 	"strings"
 
-	"github.com/Yougahei/bytebroad-canvas/model"
-	"github.com/Yougahei/bytebroad-canvas/repository"
+	"github.com/ovozoe/wxhb/model"
+	"github.com/ovozoe/wxhb/repository"
 	"github.com/google/uuid"
 )
 

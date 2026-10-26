@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"github.com/Yougahei/bytebroad-canvas/model"
+	"github.com/ovozoe/wxhb/model"
 )
 
 // SaveStorageObject 保存存储对象记录。

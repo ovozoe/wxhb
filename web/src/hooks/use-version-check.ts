@@ -1,10 +1,10 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { App } from "antd";
 import { APP_VERSION } from "@/constant/env";
 import { parseChangelog, type ReleaseInfo } from "@/lib/release";
 
-const latestVersionUrl = "https://raw.githubusercontent.com/Yougahei/bytebroad-canvas/main/VERSION";
-const latestChangelogUrl = "https://raw.githubusercontent.com/Yougahei/bytebroad-canvas/main/CHANGELOG.md";
+const latestVersionUrl = "https://raw.githubusercontent.com/ovozoe/wxhb/main/VERSION";
+const latestChangelogUrl = "https://raw.githubusercontent.com/ovozoe/wxhb/main/CHANGELOG.md";
 
 function readLocalReleases(): ReleaseInfo[] {
     try {
@@ -36,18 +36,6 @@ export function useVersionCheck() {
     const [open, setOpen] = useState(false);
     const hasNewVersion = isNewerVersion(latestVersion, currentVersion);
 
-    const checkLatestVersion = useCallback(async () => {
-        try {
-            const response = await fetch(latestVersionUrl);
-            if (!response.ok) return false;
-            const version = await response.text();
-            setLatestVersion(version.trim() || currentVersion);
-            return true;
-        } catch {
-            return false;
-        }
-    }, [currentVersion]);
-
     const checkLatestRelease = useCallback(
         async (showMessage = false) => {
             setChecking(true);
@@ -72,14 +60,9 @@ export function useVersionCheck() {
         [currentVersion, localReleases, message],
     );
 
-    useEffect(() => {
-        void checkLatestVersion();
-    }, [checkLatestVersion]);
-
     const openReleaseModal = useCallback(() => {
         setOpen(true);
-        void checkLatestRelease();
-    }, [checkLatestRelease]);
+    }, []);
 
     return {
         open,

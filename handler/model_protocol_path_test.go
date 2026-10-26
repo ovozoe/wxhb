@@ -5,7 +5,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/Yougahei/bytebroad-canvas/model"
+	"github.com/ovozoe/wxhb/model"
 )
 
 // Expectations characterize the pre-registry implementation, including overlaps

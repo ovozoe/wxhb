@@ -22,8 +22,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Yougahei/bytebroad-canvas/model"
-	"github.com/Yougahei/bytebroad-canvas/service"
+	"github.com/ovozoe/wxhb/model"
+	"github.com/ovozoe/wxhb/service"
 )
 
 func CreateCanvasImageTask(w http.ResponseWriter, r *http.Request) {

@@ -2,7 +2,7 @@
     "mcpServers": {
         "bytebroad-canvas": {
             "command": "npx",
-            "args": ["-y", "@yougahei/canvas-agent@latest", "mcp"],
+            "args": ["-y", "@ovozoe/canvas-agent@latest", "mcp"],
             "startup_timeout_sec": 180,
             "tool_timeout_sec": 90
         }

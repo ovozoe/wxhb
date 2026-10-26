@@ -3,15 +3,15 @@
   "version": "0.1.0",
   "description": "通过本地 Canvas Agent 读取和操作当前画布。",
   "author": {
-    "name": "ByteBroad Canvas"
+    "name": "bytebroad剧造工厂"
   },
   "mcpServers": "./.mcp.json",
   "skills": "./skills/",
   "interface": {
-    "displayName": "bytebroad-canvas",
+    "displayName": "bytebroad剧造工厂",
     "shortDescription": "使用 Codex 操作当前连接的画布。",
     "longDescription": "自动启动并连接本地 Agent，通过同一个 MCP 服务调用网页已有画布工具，读取节点、编辑内容并触发生成。",
-    "developerName": "ByteBroad Canvas",
+    "developerName": "bytebroad剧造工厂",
     "category": "Productivity",
     "capabilities": [
       "MCP",
@@ -22,5 +22,5 @@
       "读取当前画布并总结节点结构"
     ]
   },
-  "repository": "https://github.com/Yougahei/bytebroad-canvas"
+  "repository": "https://github.com/ovozoe/wxhb"
 }

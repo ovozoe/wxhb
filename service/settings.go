@@ -14,8 +14,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Yougahei/bytebroad-canvas/model"
-	"github.com/Yougahei/bytebroad-canvas/repository"
+	"github.com/ovozoe/wxhb/model"
+	"github.com/ovozoe/wxhb/repository"
 )
 
 var adminModelHTTPClient = &http.Client{Timeout: 30 * time.Second}
@@ -50,7 +50,6 @@ func SaveSettings(settings model.Settings) (model.Settings, error) {
 	}
 	settings = normalizeSettings(settings)
 	keepPrivateAPIKeys(&settings, normalizeSettings(saved))
-	keepPrivateAuthSecrets(&settings, normalizeSettings(saved))
 	keepPrivateStorageSecrets(&settings, normalizeSettings(saved))
 	if err := validateEnabledStorageProviderTypes(settings.Private.Storage.Providers); err != nil {
 		return model.Settings{}, err
@@ -242,7 +241,6 @@ func hidePrivateAPIKeys(settings model.Settings) model.Settings {
 		settings.Private.Storage.Providers[i].SecretAccessKey = ""
 		settings.Private.Storage.Providers[i].Password = ""
 	}
-	settings.Private.Auth.LinuxDo.ClientSecret = ""
 	return settings
 }
 
@@ -254,12 +252,6 @@ func keepPrivateAPIKeys(settings *model.Settings, saved model.Settings) {
 		if channel, ok := findSavedChannel(settings.Private.Channels[i], saved.Private.Channels, i); ok {
 			settings.Private.Channels[i].APIKey = channel.APIKey
 		}
-	}
-}
-
-func keepPrivateAuthSecrets(settings *model.Settings, saved model.Settings) {
-	if strings.TrimSpace(settings.Private.Auth.LinuxDo.ClientSecret) == "" {
-		settings.Private.Auth.LinuxDo.ClientSecret = saved.Private.Auth.LinuxDo.ClientSecret
 	}
 }
 

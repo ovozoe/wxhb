@@ -5,7 +5,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/Yougahei/bytebroad-canvas/model"
+	"github.com/ovozoe/wxhb/model"
 )
 
 const (

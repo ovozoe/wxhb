@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/Yougahei/bytebroad-canvas/service"
+	"github.com/ovozoe/wxhb/service"
 )
 
 func UserWorkflows(w http.ResponseWriter, r *http.Request) {

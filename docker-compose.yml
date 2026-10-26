@@ -1,6 +1,6 @@
 services:
   app:
-    image: ghcr.io/Yougahei/bytebroad-canvas:latest
+    image: ghcr.io/ovozoe/wxhb:latest
     build:
       context: .
       dockerfile: Dockerfile

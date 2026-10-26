@@ -1,5 +1,5 @@
 {
-    "name": "@yougahei/canvas-agent",
+    "name": "@ovozoe/canvas-agent",
     "version": "0.1.0",
     "type": "module",
     "bin": {
@@ -11,7 +11,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/Yougahei/bytebroad-canvas.git",
+        "url": "git+https://github.com/ovozoe/wxhb.git",
         "directory": "canvas-agent"
     },
     "scripts": {

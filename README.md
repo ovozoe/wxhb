@@ -1,11 +1,11 @@
 <p align="center">
-  <img src="web/public/logo.svg" width="96" alt="bytebroad-canvas logo">
+  <img src="web/public/logo.svg" width="96" alt="bytebroad剧造工厂 logo">
 </p>
 
-<h1 align="center">ByteBroad Canvas (bytebroad-canvas)</h1>
+<h1 align="center">bytebroad剧造工厂</h1>
 
 <p align="center">
-  <a href="https://github.com/Yougahei/bytebroad-canvas"><img src="https://img.shields.io/github/stars/Yougahei/bytebroad-canvas?style=flat-square&logo=github" alt="GitHub stars"></a>
+  <a href="https://github.com/ovozoe/wxhb"><img src="https://img.shields.io/github/stars/ovozoe/wxhb?style=flat-square&logo=github" alt="GitHub stars"></a>
   <a href="VERSION"><img src="https://img.shields.io/badge/version-v0.7.1-2563eb?style=flat-square" alt="Version"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-AGPL--3.0-f97316?style=flat-square" alt="License"></a>
   <a href="https://www.docker.com/"><img src="https://img.shields.io/badge/Docker-ready-2496ed?style=flat-square&logo=docker&logoColor=white" alt="Docker ready"></a>
@@ -19,15 +19,15 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/Yougahei/bytebroad-canvas/releases/latest">
+  <a href="https://github.com/ovozoe/wxhb/releases/latest">
     <img
-      src="https://img.shields.io/github/v/release/Yougahei/bytebroad-canvas?style=for-the-badge&logo=windows11&logoColor=white&label=Windows%20EXE&color=2563eb"
+      src="https://img.shields.io/github/v/release/ovozoe/wxhb?style=for-the-badge&logo=windows11&logoColor=white&label=Windows%20EXE&color=2563eb"
       alt="下载 Windows EXE"
     >
   </a>
 </p>
 
-ByteBroad Canvas 是一款面向图片，视频，音频，全能创作的开源工作台。它把画布编排、AI 图片、视频、音频生成、参考图编辑、对话助手、提示词库和素材沉淀放在同一个界面里，适合用来探索视觉方案并连续迭代图片结果
+bytebroad剧造工厂 是一款面向图片，视频，音频，全能创作的开源工作台。它把画布编排、AI 图片、视频、音频生成、参考图编辑、对话助手、提示词库和素材沉淀放在同一个界面里，适合用来探索视觉方案并连续迭代图片结果
 
 > [!CAUTION]
 > 项目目前处于开发阶段，不保证历史数据兼容。各种数据库结构和存储格式都可能直接调整，欢迎关注后续更新
@@ -41,7 +41,7 @@ ByteBroad Canvas 是一款面向图片，视频，音频，全能创作的开源
 - 导演台：在独立 3D 场景中布置角色、模型、全景环境和机位，支持镜头管理、截图，并将机位画面自动发送为连线图片节点
 - 摄像机控制：图片、视频和生成配置节点支持独立设置相机、镜头、焦距和光圈，将镜头参数自动写入生成提示词，并随节点保存和复制
 - 无限画布：多画布项目、节点拖拽缩放、连线、小地图、撤销重做、导入导出
-- AI 创作：支持 ByteBroad 接口的图片、视频、音频生成，图生图、参考图编辑、流式接收、Base64 图片返回
+- AI 创作：支持 bytebroad剧造工厂 接口的图片、视频、音频生成，图生图、参考图编辑、流式接收、Base64 图片返回
 - 生图工作台：支持侧边/悬浮底部工作台、多任务并发、历史结果合并展示、分类管理、失败详情、参考图缩略图、图片体积展示和“我的素材”复用
 - 创作工作流：支持公开/个人模板、变量表单、AI 创建工作流、单图/多图系列工作流、参考图输入和结果自动进入生图历史
 - 画布助手：围绕选中节点和上游节点对话、生图，并把结果插回画布
@@ -60,8 +60,8 @@ ByteBroad Canvas 是一款面向图片，视频，音频，全能创作的开源
 ## 快速开始
 
 ```bash
-git clone https://github.com/Yougahei/bytebroad-canvas.git
-cd bytebroad-canvas
+git clone https://github.com/ovozoe/wxhb.git
+cd wxhb
 cp .env.example .env
 # 修改默认账号密码等信息
 docker compose up -d --build
@@ -136,10 +136,10 @@ docker compose -f docker-compose.local.yml up -d --build
 
 ## Star History
 
-<a href="https://www.star-history.com/?repos=Yougahei%2Fbytebroad-canvas&type=date&legend=top-left">
+<a href="https://www.star-history.com/?repos=ovozoe%2Fwxhb&type=date&legend=top-left">
  <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=Yougahei/bytebroad-canvas&type=date&theme=dark&legend=top-left&sealed_token=SMYnxdZ99ogoiNPY5Qaeg1X9nB17KGpOCvv0Pzjz5mLCx5o7pNOpQNnYpk2CIUkdJMuAcxve8H_ZAYllKY4b7YTvZh0tiHoC8hGfknKnk2IUMYhQoIxgcQ" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=Yougahei/bytebroad-canvas&type=date&legend=top-left&sealed_token=SMYnxdZ99ogoiNPY5Qaeg1X9nB17KGpOCvv0Pzjz5mLCx5o7pNOpQNnYpk2CIUkdJMuAcxve8H_ZAYllKY4b7YTvZh0tiHoC8hGfknKnk2IUMYhQoIxgcQ" />
-   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=Yougahei/bytebroad-canvas&type=date&legend=top-left&sealed_token=SMYnxdZ99ogoiNPY5Qaeg1X9nB17KGpOCvv0Pzjz5mLCx5o7pNOpQNnYpk2CIUkdJMuAcxve8H_ZAYllKY4b7YTvZh0tiHoC8hGfknKnk2IUMYhQoIxgcQ" />
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=ovozoe/wxhb&type=date&theme=dark&legend=top-left&sealed_token=SMYnxdZ99ogoiNPY5Qaeg1X9nB17KGpOCvv0Pzjz5mLCx5o7pNOpQNnYpk2CIUkdJMuAcxve8H_ZAYllKY4b7YTvZh0tiHoC8hGfknKnk2IUMYhQoIxgcQ" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=ovozoe/wxhb&type=date&legend=top-left&sealed_token=SMYnxdZ99ogoiNPY5Qaeg1X9nB17KGpOCvv0Pzjz5mLCx5o7pNOpQNnYpk2CIUkdJMuAcxve8H_ZAYllKY4b7YTvZh0tiHoC8hGfknKnk2IUMYhQoIxgcQ" />
+   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=ovozoe/wxhb&type=date&legend=top-left&sealed_token=SMYnxdZ99ogoiNPY5Qaeg1X9nB17KGpOCvv0Pzjz5mLCx5o7pNOpQNnYpk2CIUkdJMuAcxve8H_ZAYllKY4b7YTvZh0tiHoC8hGfknKnk2IUMYhQoIxgcQ" />
  </picture>
 </a>

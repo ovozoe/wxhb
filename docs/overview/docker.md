@@ -1,6 +1,6 @@
 ---
 title: Docker 部署
-description: 使用 Docker Compose 部署 bytebroad-canvas
+description: 使用 Docker Compose 部署 bytebroad剧造工厂
 ---
 
 # Docker 部署
@@ -10,8 +10,8 @@ description: 使用 Docker Compose 部署 bytebroad-canvas
 ## 使用发布镜像
 
 ```bash
-git clone git@github.com:Yougahei/bytebroad-canvas.git
-cd bytebroad-canvas
+git clone git@github.com:ovozoe/wxhb.git
+cd wxhb
 cp .env.example .env
 docker compose up -d
 ```
@@ -45,5 +45,5 @@ docker compose -f docker-compose.local.yml up -d --build
 Docker 部署时建议把 `.env` 中的 SQLite 路径设置为：
 
 ```text
-DATABASE_DSN=/app/data/bytebroad-canvas.db
+DATABASE_DSN=/app/data/bytebroad剧造工厂.db
 ```

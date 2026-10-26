@@ -3,7 +3,7 @@ package handler
 import (
 	"net/http"
 
-	"github.com/Yougahei/bytebroad-canvas/service"
+	"github.com/ovozoe/wxhb/service"
 )
 
 func Prompts(w http.ResponseWriter, r *http.Request) {

@@ -3,7 +3,7 @@ package repository
 import (
 	"encoding/json"
 
-	"github.com/Yougahei/bytebroad-canvas/model"
+	"github.com/ovozoe/wxhb/model"
 	"gorm.io/gorm/clause"
 )
 

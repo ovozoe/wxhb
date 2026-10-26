@@ -3,7 +3,7 @@ package service
 import (
 	"testing"
 
-	"github.com/Yougahei/bytebroad-canvas/model"
+	"github.com/ovozoe/wxhb/model"
 )
 
 func TestValidateEnabledStorageProviderTypes(t *testing.T) {

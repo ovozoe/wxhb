@@ -1,4 +1,4 @@
-module github.com/Yougahei/bytebroad-canvas
+module github.com/ovozoe/wxhb
 
 go 1.25.0
 

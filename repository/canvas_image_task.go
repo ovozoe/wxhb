@@ -3,7 +3,7 @@ package repository
 import (
 	"strings"
 
-	"github.com/Yougahei/bytebroad-canvas/model"
+	"github.com/ovozoe/wxhb/model"
 	"gorm.io/gorm"
 )
 

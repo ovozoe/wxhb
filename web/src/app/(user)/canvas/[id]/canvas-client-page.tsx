@@ -1396,7 +1396,7 @@ function InfiniteCanvasPage({ projectId }: { projectId: string }) {
     }, [applyHistory]);
 
     const createAndOpenProject = useCallback(() => {
-        const id = createProject(`bytebroad-canvas ${useCanvasStore.getState().projects.length + 1}`);
+        const id = createProject(`bytebroad剧造工厂 ${useCanvasStore.getState().projects.length + 1}`);
         router.push(`/canvas/${id}`);
     }, [createProject, router]);
 

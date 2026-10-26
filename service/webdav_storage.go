@@ -9,7 +9,7 @@ import (
 	"time"
 
 	"github.com/studio-b12/gowebdav"
-	"github.com/Yougahei/bytebroad-canvas/model"
+	"github.com/ovozoe/wxhb/model"
 )
 
 func newWebDAVClient(provider model.StorageProvider) (*gowebdav.Client, error) {

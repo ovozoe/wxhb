@@ -12,10 +12,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Yougahei/bytebroad-canvas/config"
-	"github.com/Yougahei/bytebroad-canvas/model"
-	"github.com/Yougahei/bytebroad-canvas/repository"
-	"github.com/Yougahei/bytebroad-canvas/service"
+	"github.com/ovozoe/wxhb/config"
+	"github.com/ovozoe/wxhb/model"
+	"github.com/ovozoe/wxhb/repository"
+	"github.com/ovozoe/wxhb/service"
 )
 
 func TestModelProtocolChannelFlow(t *testing.T) {

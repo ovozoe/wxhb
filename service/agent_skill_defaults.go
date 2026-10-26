@@ -11,8 +11,8 @@ import (
 	"unicode/utf8"
 
 	"github.com/goccy/go-yaml"
-	"github.com/Yougahei/bytebroad-canvas/model"
-	"github.com/Yougahei/bytebroad-canvas/repository"
+	"github.com/ovozoe/wxhb/model"
+	"github.com/ovozoe/wxhb/repository"
 )
 
 //go:embed skills

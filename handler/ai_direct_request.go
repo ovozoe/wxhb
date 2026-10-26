@@ -9,8 +9,8 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/Yougahei/bytebroad-canvas/model"
-	"github.com/Yougahei/bytebroad-canvas/service"
+	"github.com/ovozoe/wxhb/model"
+	"github.com/ovozoe/wxhb/service"
 )
 
 const directAIRequestBodyLimit = 1 << 20

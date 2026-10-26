@@ -7,8 +7,8 @@ import "./globals.css";
 import React from "react";
 
 export const metadata: Metadata = {
-    title: "bytebroad-canvas",
-    description: "bytebroad-canvas 创作工具",
+    title: "bytebroad剧造工厂",
+    description: "bytebroad剧造工厂 创作工具",
 };
 
 export default function RootLayout({

@@ -117,8 +117,8 @@ export default function IndexPage() {
         }
         setSubmitting(true);
         const titles = new Set(useCanvasStore.getState().projects.map(({ title }) => title));
-        let title = "bytebroad-canvas";
-        for (let i = 1; titles.has(title); i++) title = `bytebroad-canvas ${i}`;
+        let title = "bytebroad剧造工厂";
+        for (let i = 1; titles.has(title); i++) title = `bytebroad剧造工厂 ${i}`;
         const projectId = createProject(title, {
             agentConfig,
             pendingAgentRequest: { prompt: text, assets: pendingAssets.filter((asset) => referenceIds.includes(asset.nodeId)), skills: selectedSkills },

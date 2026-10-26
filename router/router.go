@@ -4,8 +4,8 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/Yougahei/bytebroad-canvas/handler"
-	"github.com/Yougahei/bytebroad-canvas/middleware"
+	"github.com/ovozoe/wxhb/handler"
+	"github.com/ovozoe/wxhb/middleware"
 )
 
 func New() *gin.Engine {
@@ -18,8 +18,8 @@ func New() *gin.Engine {
 	})
 	api.POST("/auth/register", gin.WrapF(handler.Register))
 	api.POST("/auth/login", gin.WrapF(handler.Login))
-	api.GET("/auth/linux-do/authorize", gin.WrapF(handler.LinuxDoAuthorize))
-	api.GET("/auth/linux-do/callback", gin.WrapF(handler.LinuxDoCallback))
+	api.POST("/device/authorize", gin.WrapF(handler.DeviceAuthorize))
+	api.POST("/device/token", gin.WrapF(handler.DeviceToken))
 	api.GET("/auth/me", middleware.OptionalAuth, gin.WrapF(handler.CurrentUser))
 	api.GET("/settings", gin.WrapF(handler.Settings))
 	api.GET("/storage/config", gin.WrapF(handler.StorageConfig))

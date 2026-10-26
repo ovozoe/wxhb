@@ -3,8 +3,8 @@ package service
 import (
 	"time"
 
-	"github.com/Yougahei/bytebroad-canvas/model"
-	"github.com/Yougahei/bytebroad-canvas/repository"
+	"github.com/ovozoe/wxhb/model"
+	"github.com/ovozoe/wxhb/repository"
 )
 
 func ListPrompts(q model.Query) (model.PromptList, error) {

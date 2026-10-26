@@ -32,7 +32,7 @@ export function AppTopNav() {
                                         WebkitMask: "url(/logo.svg) center / contain no-repeat",
                                     }}
                                 />
-                                <span className="text-base font-medium">bytebroad-canvas</span>
+                                <span className="text-base font-medium">bytebroad剧造工厂</span>
                             </Link>
 
                             <button

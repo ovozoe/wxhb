@@ -8,8 +8,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Yougahei/bytebroad-canvas/model"
-	"github.com/Yougahei/bytebroad-canvas/service"
+	"github.com/ovozoe/wxhb/model"
+	"github.com/ovozoe/wxhb/service"
 )
 
 func normalizeAPIMartImageBody(body []byte, contentType string, modelName string, channel model.ModelChannel) ([]byte, string, error) {

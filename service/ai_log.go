@@ -15,9 +15,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/Yougahei/bytebroad-canvas/config"
-	"github.com/Yougahei/bytebroad-canvas/model"
-	"github.com/Yougahei/bytebroad-canvas/repository"
+	"github.com/ovozoe/wxhb/config"
+	"github.com/ovozoe/wxhb/model"
+	"github.com/ovozoe/wxhb/repository"
 	"github.com/google/uuid"
 	"github.com/robfig/cron/v3"
 )

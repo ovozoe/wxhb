@@ -4,9 +4,9 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/Yougahei/bytebroad-canvas/handler"
-	"github.com/Yougahei/bytebroad-canvas/model"
-	"github.com/Yougahei/bytebroad-canvas/service"
+	"github.com/ovozoe/wxhb/handler"
+	"github.com/ovozoe/wxhb/model"
+	"github.com/ovozoe/wxhb/service"
 	"github.com/gin-gonic/gin"
 )
 

@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/Yougahei/bytebroad-canvas/service"
+	"github.com/ovozoe/wxhb/service"
 )
 
 func UserCanvasProjects(w http.ResponseWriter, r *http.Request) {
