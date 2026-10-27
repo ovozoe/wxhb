@@ -1,25 +1,7 @@
 "use client";
 
 import { type CSSProperties, type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import {
-    History,
-    Bot,
-    Clapperboard,
-    Copy,
-    Group,
-    Image as ImageIcon,
-    Music2,
-    PanelRightClose,
-    Pencil,
-    Plus,
-    RotateCcw,
-    Settings2,
-    Sparkles,
-    Trash2,
-    Type,
-    Video,
-    X,
-} from "lucide-react";
+import { History, Bot, Clapperboard, Copy, Group, Image as ImageIcon, Music2, PanelRightClose, Pencil, Plus, RotateCcw, Settings2, Sparkles, Trash2, Type, Video, X } from "lucide-react";
 import { App, Button, Modal, Segmented, Switch, Tooltip } from "antd";
 import { motion } from "motion/react";
 import { nanoid } from "nanoid";
@@ -139,6 +121,8 @@ export function CanvasAssistantPanel({
     const messageListRef = useRef<HTMLDivElement>(null);
     const consumedReferenceNodeClickVersionRef = useRef(0);
     const [view, setView] = useState<"chat" | "history">("chat");
+    const draftKey = `canvas-assistant-draft:${canvasId}`;
+    const draftReadyRef = useRef(false);
     const [prompt, setPrompt] = useState("");
     const [isRunning, setIsRunning] = useState(false);
     const [checkedChatIds, setCheckedChatIds] = useState<string[]>([]);
@@ -150,6 +134,33 @@ export function CanvasAssistantPanel({
     const [selectedSkills, setSelectedSkills] = useState<CanvasAgentSkillSelection[]>([]);
     const [removedReferenceIds, setRemovedReferenceIds] = useState<Set<string>>(new Set());
     const [pendingDelete, setPendingDelete] = useState<PendingDeleteConfirmation | null>(null);
+
+    useEffect(() => {
+        try {
+            const raw = localStorage.getItem(draftKey);
+            if (raw) {
+                const draft = JSON.parse(raw) as { prompt?: string; referenceIds?: string[]; skills?: CanvasAgentSkillSelection[] };
+                setPrompt(draft.prompt || "");
+                setComposerReferenceIds(draft.referenceIds || []);
+                setSelectedSkills(draft.skills || []);
+            }
+        } catch {
+            /* 草稿读取失败，忽略 */
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    useEffect(() => {
+        if (!draftReadyRef.current) {
+            draftReadyRef.current = true;
+            return;
+        }
+        try {
+            localStorage.setItem(draftKey, JSON.stringify({ prompt, referenceIds: composerReferenceIds, skills: selectedSkills }));
+        } catch {
+            /* 草稿保存失败，忽略 */
+        }
+    }, [draftKey, prompt, composerReferenceIds, selectedSkills]);
     const [initialSession] = useState(() => createSession());
     const lastSessionIds = useRef<string | null>(null);
     const safeSessions = sessions.length ? sessions : [initialSession];
@@ -164,11 +175,14 @@ export function CanvasAssistantPanel({
         activeSessionIdRef.current = resolvedActiveSessionId;
     }, [resolvedActiveSessionId, sessions]);
 
-    useEffect(() => () => {
-        abortRef.current?.abort();
-        pendingDeleteRef.current?.resolve(false);
-        pendingDeleteRef.current = null;
-    }, []);
+    useEffect(
+        () => () => {
+            abortRef.current?.abort();
+            pendingDeleteRef.current?.resolve(false);
+            pendingDeleteRef.current = null;
+        },
+        [],
+    );
 
     const activeSession = visibleSessions.find((session) => session.id === resolvedActiveSessionId) || visibleSessions[0] || null;
     const historySessions = visibleSessions.filter((session) => session.messages.length > 0);
@@ -179,18 +193,20 @@ export function CanvasAssistantPanel({
     const resourceReferences = useMemo(() => buildAllCanvasResourceReferences(nodes), [nodes]);
     const resourceReferenceById = useMemo(() => new Map(resourceReferences.map((reference) => [reference.nodeId, reference])), [resourceReferences]);
     const nodeById = useMemo(() => new Map(nodes.map((node) => [node.id, node])), [nodes]);
-    const resolveReferences = useCallback((ids: string[]) => ids.flatMap((id) => {
-        const node = nodeById.get(id);
-        const resource = resourceReferenceById.get(id);
-        const reference = node && resource ? nodeToReference(node, resource) : null;
-        return reference ? [reference] : [];
-    }), [nodeById, resourceReferenceById]);
+    const resolveReferences = useCallback(
+        (ids: string[]) =>
+            ids.flatMap((id) => {
+                const node = nodeById.get(id);
+                const resource = resourceReferenceById.get(id);
+                const reference = node && resource ? nodeToReference(node, resource) : null;
+                return reference ? [reference] : [];
+            }),
+        [nodeById, resourceReferenceById],
+    );
     const composerReferences = useMemo(() => resolveReferences(composerReferenceIds), [composerReferenceIds, resolveReferences]);
     const pendingReferences = useMemo(() => {
         const pendingClickNodeId = referenceNodeClick.version > consumedReferenceNodeClickVersionRef.current ? referenceNodeClick.nodeId : null;
-        return resourceReferences.filter(
-            (reference) => selectedNodeIds.has(reference.nodeId) && ((!composerReferenceIds.includes(reference.nodeId) && !removedReferenceIds.has(reference.nodeId)) || reference.nodeId === pendingClickNodeId),
-        );
+        return resourceReferences.filter((reference) => selectedNodeIds.has(reference.nodeId) && ((!composerReferenceIds.includes(reference.nodeId) && !removedReferenceIds.has(reference.nodeId)) || reference.nodeId === pendingClickNodeId));
     }, [composerReferenceIds, referenceNodeClick, removedReferenceIds, resourceReferences, selectedNodeIds]);
     const iconButtonStyle = { color: theme.node.muted };
     const settleDeleteConfirmation = (confirmed: boolean) => {
@@ -248,10 +264,13 @@ export function CanvasAssistantPanel({
         const removing = sessionsRef.current.filter((session) => ids.includes(session.id));
         const next = sessionsRef.current.filter((session) => !removing.some((item) => item.id === session.id));
         let selected = next.find((session) => session.id === activeSessionIdRef.current) || next[0];
-        if (!selected) { selected = createSession(); next.unshift(selected); }
+        if (!selected) {
+            selected = createSession();
+            next.unshift(selected);
+        }
         commitSessions(next, selected.id);
         if (!next.some((session) => session.messages.length)) {
-            setSelectedSkills((current) => current === selectedSkills ? [] : current);
+            setSelectedSkills((current) => (current === selectedSkills ? [] : current));
         }
         cleanupImages({ sessions: next });
         setCheckedChatIds((previous) => previous.filter((id) => !ids.includes(id)));
@@ -425,9 +444,7 @@ export function CanvasAssistantPanel({
                 contextCheckpoint: result.contextCheckpoint,
                 jsonToolFallbackKey: result.jsonFallbackMode ? jsonToolFallbackKey : undefined,
                 jsonToolFallbackMode: result.jsonFallbackMode,
-                messages: current.messages.map((message) =>
-                    message.id === assistantId ? { ...message, text: result.reply, status: "success", activity: undefined } : message,
-                ),
+                messages: current.messages.map((message) => (message.id === assistantId ? { ...message, text: result.reply, status: "success", activity: undefined } : message)),
                 updatedAt: new Date().toISOString(),
             }));
         } catch (error) {
@@ -500,7 +517,15 @@ export function CanvasAssistantPanel({
                 transition={{ duration: resizing ? 0 : PANEL_MOTION_SECONDS, ease: [0.22, 1, 0.36, 1] }}
                 style={{ width, background: theme.node.panel, borderColor: theme.node.stroke, color: theme.node.text }}
             >
-                <button type="button" className="absolute inset-y-0 left-0 z-40 w-4 -translate-x-1/2 cursor-col-resize" onMouseDown={(event) => { event.preventDefault(); startResize(); }} aria-label="调整右侧面板宽度" />
+                <button
+                    type="button"
+                    className="absolute inset-y-0 left-0 z-40 w-4 -translate-x-1/2 cursor-col-resize"
+                    onMouseDown={(event) => {
+                        event.preventDefault();
+                        startResize();
+                    }}
+                    aria-label="调整右侧面板宽度"
+                />
                 <div className="flex flex-wrap items-center justify-between gap-2 border-b px-4 py-3" style={{ borderColor: theme.node.stroke }}>
                     <div className="flex items-center gap-2 text-sm font-medium">
                         <Bot className="size-4" />
@@ -513,7 +538,15 @@ export function CanvasAssistantPanel({
                                     <Button type="text" shape="circle" className="!h-8 !w-8 !min-w-8" style={iconButtonStyle} icon={<Trash2 className="size-4" />} disabled={!checkedChatIds.length} onClick={() => setDeleteChatIds(checkedChatIds)} />
                                 </Tooltip>
                                 <Tooltip title="删除全部">
-                                    <Button type="text" shape="circle" className="!h-8 !w-8 !min-w-8" style={iconButtonStyle} icon={<X className="size-4" />} disabled={!historySessions.length} onClick={() => setDeleteChatIds(historySessions.map((session) => session.id))} />
+                                    <Button
+                                        type="text"
+                                        shape="circle"
+                                        className="!h-8 !w-8 !min-w-8"
+                                        style={iconButtonStyle}
+                                        icon={<X className="size-4" />}
+                                        disabled={!historySessions.length}
+                                        onClick={() => setDeleteChatIds(historySessions.map((session) => session.id))}
+                                    />
                                 </Tooltip>
                             </>
                         ) : null}
@@ -573,10 +606,15 @@ export function CanvasAssistantPanel({
 
                 {pendingDelete ? (
                     <div className="thin-scrollbar max-h-[50%] shrink-0 space-y-2 overflow-y-auto pb-2">
-                        <AssistantPanelCard title={`删除「${pendingDelete.title}」？`} actions={[
-                            { label: "取消", onClick: () => settleDeleteConfirmation(false) },
-                            { label: "确认删除", danger: true, onClick: () => settleDeleteConfirmation(true) },
-                        ]}><div className="text-xs opacity-55">相关连线和任务记录将按现有逻辑清理</div></AssistantPanelCard>
+                        <AssistantPanelCard
+                            title={`删除「${pendingDelete.title}」？`}
+                            actions={[
+                                { label: "取消", onClick: () => settleDeleteConfirmation(false) },
+                                { label: "确认删除", danger: true, onClick: () => settleDeleteConfirmation(true) },
+                            ]}
+                        >
+                            <div className="text-xs opacity-55">相关连线和任务记录将按现有逻辑清理</div>
+                        </AssistantPanelCard>
                     </div>
                 ) : null}
                 {view === "chat" ? (
@@ -612,7 +650,11 @@ export function CanvasAssistantPanel({
                     centered
                     width={520}
                     onCancel={() => setSettingsOpen(false)}
-                    footer={<Button type="primary" onClick={() => setSettingsOpen(false)}>完成</Button>}
+                    footer={
+                        <Button type="primary" onClick={() => setSettingsOpen(false)}>
+                            完成
+                        </Button>
+                    }
                 >
                     <div className="flex items-center justify-between gap-6 py-2">
                         <div className="min-w-0">
@@ -621,7 +663,10 @@ export function CanvasAssistantPanel({
                         </div>
                         <Segmented
                             value={agentConfig.textApiMode}
-                            options={[{ label: "Chat", value: "chat" }, { label: "Responses", value: "responses" }]}
+                            options={[
+                                { label: "Chat", value: "chat" },
+                                { label: "Responses", value: "responses" },
+                            ]}
                             onChange={(textApiMode) => onAgentConfigChange({ textApiMode: textApiMode as CanvasAgentConfig["textApiMode"] })}
                         />
                     </div>
@@ -648,8 +693,10 @@ export function CanvasAssistantPanel({
                                 onClick={async () => {
                                     try {
                                         await removeSessions(deleteChatIds);
-                                        setDeleteChatIds((current) => current === deleteChatIds ? [] : current);
-                                    } catch (error) { appMessage.error(error instanceof Error ? error.message : "删除会话失败"); }
+                                        setDeleteChatIds((current) => (current === deleteChatIds ? [] : current));
+                                    } catch (error) {
+                                        appMessage.error(error instanceof Error ? error.message : "删除会话失败");
+                                    }
                                 }}
                             >
                                 删除
@@ -666,15 +713,27 @@ export function CanvasAssistantPanel({
 
 function AssistantPanelCard({ title, children, actions }: { title: string; children: ReactNode; actions: PanelCardAction[] }) {
     const theme = canvasThemes[useThemeStore((state) => state.theme)];
-    return <section className="mx-2 overflow-hidden rounded-xl border" style={{ background: theme.node.fill, borderColor: theme.node.stroke }} aria-label={title}>
-        <div className="min-w-0 px-3 py-2.5">
-            <div className="break-words text-sm font-medium">{title}</div>
-            <div className="mt-1">{children}</div>
-        </div>
-        <div className="flex border-t" style={{ borderColor: theme.node.stroke }}>
-            {actions.map((action, index) => <button key={action.label} type="button" className={cn("h-9 min-w-0 flex-1 cursor-pointer bg-transparent text-sm", index > 0 && "border-l", action.danger && "font-medium")} style={{ borderColor: theme.node.stroke, color: action.danger ? "#ef4444" : theme.node.text }} onClick={action.onClick}>{action.label}</button>)}
-        </div>
-    </section>;
+    return (
+        <section className="mx-2 overflow-hidden rounded-xl border" style={{ background: theme.node.fill, borderColor: theme.node.stroke }} aria-label={title}>
+            <div className="min-w-0 px-3 py-2.5">
+                <div className="break-words text-sm font-medium">{title}</div>
+                <div className="mt-1">{children}</div>
+            </div>
+            <div className="flex border-t" style={{ borderColor: theme.node.stroke }}>
+                {actions.map((action, index) => (
+                    <button
+                        key={action.label}
+                        type="button"
+                        className={cn("h-9 min-w-0 flex-1 cursor-pointer bg-transparent text-sm", index > 0 && "border-l", action.danger && "font-medium")}
+                        style={{ borderColor: theme.node.stroke, color: action.danger ? "#ef4444" : theme.node.text }}
+                        onClick={action.onClick}
+                    >
+                        {action.label}
+                    </button>
+                ))}
+            </div>
+        </section>
+    );
 }
 
 const ASSISTANT_MARKDOWN_COMPONENTS: Components = {
@@ -718,31 +777,40 @@ function AssistantMarkdown({ children, components }: { children: string; compone
 function AssistantMessages({ messages, nodeById, onFocusNode, onRetry }: { messages: CanvasAssistantMessage[]; nodeById: ReadonlyMap<string, CanvasNodeData>; onFocusNode: (nodeId: string) => void; onRetry: (message: CanvasAssistantMessage) => void }) {
     const theme = canvasThemes[useThemeStore((state) => state.theme)];
     const copyText = useCopyText();
-    const markdownComponents = useMemo<Components>(() => ({
-        ...ASSISTANT_MARKDOWN_COMPONENTS,
-        code: ({ node, className, children, ...props }) => {
-            const canvasNode = nodeById.get(String(children).trim());
-            if (node?.position?.start.line === node?.position?.end.line && canvasNode) {
-                const { Icon, label: typeLabel } = ASSISTANT_NODE_TYPE_META[canvasNode.type];
-                const hasImage = isCanvasImageNodeType(canvasNode.type) && canvasNode.metadata?.content;
+    const markdownComponents = useMemo<Components>(
+        () => ({
+            ...ASSISTANT_MARKDOWN_COMPONENTS,
+            code: ({ node, className, children, ...props }) => {
+                const canvasNode = nodeById.get(String(children).trim());
+                if (node?.position?.start.line === node?.position?.end.line && canvasNode) {
+                    const { Icon, label: typeLabel } = ASSISTANT_NODE_TYPE_META[canvasNode.type];
+                    const hasImage = isCanvasImageNodeType(canvasNode.type) && canvasNode.metadata?.content;
+                    return (
+                        <span className="my-1 flex w-full min-w-0 items-center rounded-lg transition-opacity hover:opacity-80" style={{ background: theme.toolbar.itemHover }}>
+                            <button type="button" onClick={() => onFocusNode(canvasNode.id)} className="flex min-w-0 flex-1 items-center gap-3 px-2 py-2 text-left outline-none" title={`定位到画布节点：${canvasNode.title || typeLabel}`}>
+                                <span className="grid size-10 shrink-0 place-items-center overflow-hidden rounded-md">
+                                    {hasImage ? <img src={canvasNode.metadata?.content} alt={canvasNode.title || typeLabel} className="size-full object-cover" /> : <Icon className="size-5 opacity-60" />}
+                                </span>
+                                <span className="min-w-0 flex-1 space-y-0.5">
+                                    <span className="block truncate text-sm font-medium leading-snug">{canvasNode.title || `${typeLabel}节点`}</span>
+                                    <span className="block truncate text-xs leading-snug opacity-50">{canvasNode.type === CanvasNodeType.Text ? canvasNode.metadata?.content || canvasNode.metadata?.prompt || "" : typeLabel}</span>
+                                </span>
+                                {canvasNode.metadata?.status && canvasNode.metadata.status !== "idle" ? (
+                                    <span className="size-1.5 shrink-0 rounded-full" style={{ background: ASSISTANT_NODE_STATUS_COLOR[canvasNode.metadata.status] || "transparent" }} />
+                                ) : null}
+                            </button>
+                        </span>
+                    );
+                }
                 return (
-                    <span className="my-1 flex w-full min-w-0 items-center rounded-lg transition-opacity hover:opacity-80" style={{ background: theme.toolbar.itemHover }}>
-                        <button type="button" onClick={() => onFocusNode(canvasNode.id)} className="flex min-w-0 flex-1 items-center gap-3 px-2 py-2 text-left outline-none" title={`定位到画布节点：${canvasNode.title || typeLabel}`}>
-                            <span className="grid size-10 shrink-0 place-items-center overflow-hidden rounded-md">
-                                {hasImage ? <img src={canvasNode.metadata?.content} alt={canvasNode.title || typeLabel} className="size-full object-cover" /> : <Icon className="size-5 opacity-60" />}
-                            </span>
-                            <span className="min-w-0 flex-1 space-y-0.5">
-                                <span className="block truncate text-sm font-medium leading-snug">{canvasNode.title || `${typeLabel}节点`}</span>
-                                <span className="block truncate text-xs leading-snug opacity-50">{canvasNode.type === CanvasNodeType.Text ? canvasNode.metadata?.content || canvasNode.metadata?.prompt || "" : typeLabel}</span>
-                            </span>
-                            {canvasNode.metadata?.status && canvasNode.metadata.status !== "idle" ? <span className="size-1.5 shrink-0 rounded-full" style={{ background: ASSISTANT_NODE_STATUS_COLOR[canvasNode.metadata.status] || "transparent" }} /> : null}
-                        </button>
-                    </span>
+                    <code {...props} className={className}>
+                        {children}
+                    </code>
                 );
-            }
-            return <code {...props} className={className}>{children}</code>;
-        },
-    }), [nodeById, onFocusNode, theme]);
+            },
+        }),
+        [nodeById, onFocusNode, theme],
+    );
     let previousUserSkills: CanvasAgentSkillSelection[] = [];
 
     return (
@@ -760,8 +828,8 @@ function AssistantMessages({ messages, nodeById, onFocusNode, onRetry }: { messa
                                     message.role === "user"
                                         ? { background: theme.toolbar.activeBg, color: theme.toolbar.activeText }
                                         : message.status === "error"
-                                            ? { background: theme.node.fill, color: theme.node.text }
-                                            : { background: theme.node.fill, color: theme.node.text }
+                                          ? { background: theme.node.fill, color: theme.node.text }
+                                          : { background: theme.node.fill, color: theme.node.text }
                                 }
                             >
                                 {message.role === "assistant" ? (
